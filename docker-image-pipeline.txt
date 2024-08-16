@@ -1,22 +1,31 @@
-node{
-    stage('git-code'){
+node {
+    stage('git-code') {
+        // Check out the code from the Git repository
         git 'https://github.com/sampath14/docker-project.git'
     }
-    stage('build-maven'){
-        def mvnHome = tool name: 'apache-maven-3.9.6', type: 'maven'
+    stage('build-maven') {
+        // Define the Maven home and command
+        def mvnHome = tool name: 'apache-maven-3.9.8', type: 'maven'
         def mvnCMD = "${mvnHome}/bin/mvn"
+        
+        // Run Maven clean install
         sh "${mvnCMD} clean install"
     }
-    stage('build docker image'){
-        sh 'docker image build -t sampath245613/docker-image1:latest .'
+    stage('build docker image') {
+        // Build the Docker image
+        sh 'docker build -t sampath144/docker144:latest .'
+    }
+    stage('push image') {
+        // Log in to Docker with credentials
+        withCredentials([usernamePassword(credentialsId: 'sampath144', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+            sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+        }
         
+        // Push the Docker image to the repository
+        sh 'docker push sampath144/docker144:latest'
     }
-    stage('push image'){
-        withCredentials([string(credentialsId: 'sampath123', variable: 'sampath245613')]) {
-        sh "docker login -u sampath245613 -p ${sampath245613}"
-       }
-       sh 'docker image push sampath245613/docker-image1:latest'
-    }
+}
+
     stage('create container'){
         sshagent(['sampath']) {
         sh 'ssh -o StrictHostKeyChecking=no ubuntu@54.221.148.144 docker run -p 800:80 -d --name container sampath245613/docker-image1:latest'
