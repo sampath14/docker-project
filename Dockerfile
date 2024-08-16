@@ -3,11 +3,11 @@ RUN apt-get -y update
 RUN apt-get install -y apache2 curl
 RUN apt-get install -y zip
 RUN apt-get install -y unzip
-ADD https://www.free-css.com/assets/files/free-css-templates/download/page295/kider.zip /var/www/html/
+ADD https://html5up.net/ethereal/download/html5up-paradigm-shift.zip /var/www/html/
 WORKDIR /var/www/html
-RUN unzip kider.zip
-RUN cp -rvf kider/* .
-RUN rm -rf kider kider.zip
+RUN unzip html5up-paradigm-shift.zip
+RUN cp -rvf html15/* .
+RUN rm -rf html5up-paradigm-shift html5up-paradigm-shift.zip
 ENTRYPOINT ["/usr/sbin/apache2ctl"]
 CMD ["-D", "FOREGROUND"]
 EXPOSE 80
