@@ -11,13 +11,8 @@ WORKDIR /var/www/html
 RUN curl -o freefolio.zip https://www.free-css.com/assets/files/free-css-templates/download/page278/freefolio.zip
 
 # Unzip the downloaded file and list its contents
-RUN unzip freefolio.zip && \
-    ls -la && \
-    # If the unzipped content is in a subdirectory, move it to the current directory
-    mv freefolio/* . && \
-    rmdir freefolio && \
-    rm -rf freefolio.zip
-
+RUN unzip freefolio.zip
+   
 # Ensure Apache runs in the foreground
 ENTRYPOINT ["/usr/sbin/apache2ctl"]
 CMD ["-D", "FOREGROUND"]
